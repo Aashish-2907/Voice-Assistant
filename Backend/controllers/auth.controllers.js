@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 
 export const signUp=async(req,res)=>{
     try{
+        console.log("Signup request body:", req.body);
         const{name,email,password}=req.body;
         const existEmail=await User.findOne({email})
         if(existEmail){
@@ -21,7 +22,8 @@ export const signUp=async(req,res)=>{
         const token = await genToken(user._id);
         res.cookie("token",token,{httpOnly:true,
             maxAge:7*24*60*60*1000,
-            sameSite:"strict",
+            sameSite:"lax",
+            path: "/",
             secure:false
         })
         return res.status(201).json(user);
@@ -50,10 +52,11 @@ export const Login=async(req,res)=>{
         const token = await genToken(user._id);
         res.cookie("token",token,{httpOnly:true,
             maxAge:7*24*60*60*1000,
-            sameSite:"strict",
+            sameSite:"lax",
             secure:false
         })
-        return res.status(200).json(user);
+        // console.log("User logged in:", user);
+        return res.status(201).json(user);
     }
     catch(error){
         return res.status(500).json({message:`Login error ${error}`});

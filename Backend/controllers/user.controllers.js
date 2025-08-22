@@ -1,9 +1,13 @@
 import User from '../models/user.model.js';
 
-export const getCurrentUser=async (req, res) => {
+ const getCurrentUser=async (req, res) => {
     try {
-        const userId = req.userID; // Assuming userID is set by the isAuth middleware
-        const user = await User.findById(userID).select('-password');
+        const userId = req.userId; // Assuming userID is set by the isAuth middleware
+        const user = await User.findById(userId).select('-password');
+        console.log("User fetched:", user);
+        console.log("Token userId:", req.userId);
+        // const user = await User.findById(req.userId);
+        console.log("User fetched:", user);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }

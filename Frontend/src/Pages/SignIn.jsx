@@ -18,13 +18,27 @@ function SignIn() {
         e.preventDefault();
         setError("");
         setLoading(true);
+        // try { 
+        //     let res=await axios.post(`${serverUrl}/api/auth/login`,{email,password},
+        //         {headers: { "Content-Type": "application/json" }},
+        //         {withCredentials:true});
+        //          console.log(res.data);
+        //     setLoading(false);
+        // }
         try { 
-            let res=await axios.post(`${serverUrl}/api/auth/signup`,{email,password},
-                {headers: { "Content-Type": "application/json" }},
-                {withCredentials:true});
-                 console.log(res.data);
-            setLoading(false);
-        } catch (error) {
+    let res = await axios.post(
+        `${serverUrl}/api/auth/login`,
+        { email, password },
+        {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true
+        }
+    );
+    console.log(res.data);
+    setLoading(false);
+    }
+        
+        catch (error) {
             console.log(error);
             setError(error.response.data.message);
             setLoading(false);

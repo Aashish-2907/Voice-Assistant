@@ -18,15 +18,29 @@ function SignUp() {
     const[loading,setLoading]=useState(false);
     const handleSignup=async(e)=>{
         e.preventDefault();
+        console.log("Form Submitted", { name, email, password });
         setError("");
         setLoading(true);
+        // try { 
+        //     let res=await axios.post(`${serverUrl}/api/auth/signup`,{name,email,password},
+        //          {headers: { "Content-Type": "application/json" }},
+        //         {withCredentials:true});
+        //     console.log(res.data);
+        //     setLoading(false);
+        // }
         try { 
-            let res=await axios.post(`${serverUrl}/api/auth/signup`,{name,email,password},
-                 {headers: { "Content-Type": "application/json" }},
-                {withCredentials:true});
-            console.log(res.data);
-            setLoading(false);
-        } catch (error) {
+    let res = await axios.post(
+        `${serverUrl}/api/auth/signup`,
+        { name, email, password },
+        {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true
+        }
+    );
+    console.log(res.data);
+    setLoading(false);
+}
+        catch (error) {
             console.log(error);
             setError(error.response.data.message);
             setLoading(false);
