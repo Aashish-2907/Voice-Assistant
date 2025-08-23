@@ -3,6 +3,7 @@ import { Navigate, Route,Routes } from "react-router-dom";
 import SignUp from "./Pages/Signup";
 import SignIn from "./Pages/Signin";
 import Customize from "./Pages/Customize";
+import Customize2 from "./Pages/Customize2.jsx";
 import { useContext } from "react";
 import { userDataContext } from "./context/userContext.jsx";
 import Home from "./Pages/Home.jsx";
@@ -18,6 +19,7 @@ function App() {
       <Route path="/signup" element={!userData?<SignUp/>:<Navigate to={"/"}/>}/>    
       <Route path="/signin" element={!userData?<SignIn/>:<Navigate to={"/"}/>}/>
       <Route path="/customize" element={userData?<Customize/>:<Navigate to={"/signin"}></Navigate>}/>
+      <Route path="/customize2" element={userData?<Customize2/>:<Navigate to={"/signin"}></Navigate>}/> 
     </Routes>
   );
 }

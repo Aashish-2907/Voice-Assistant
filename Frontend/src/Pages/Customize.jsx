@@ -10,8 +10,10 @@ import image6 from '../assets/Image-06.jpg'
 import image7 from '../assets/Image-07.jpg'
 import { IoMdCloudUpload } from "react-icons/io";
 import { userDataContext } from '../context/userContext.jsx';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 function Customize() {
+  const navigate=useNavigate();
   const {serverUrl,
         userData,
         setUserData,frontendImage,
@@ -51,9 +53,11 @@ function Customize() {
             <input type="file" accept="image/*" ref={inputImage} hidden 
             onChange={handleImage}/>
         </div>
-        <button className='min-w-[150px] h-[60px] mt-[30px] text-black font-semibold bg-white rounded-full text-[19px] hover:cursor-pointer'>
+        {selectedImage &&<button className='min-w-[150px] h-[60px] mt-[30px] text-black font-semibold bg-white rounded-full text-[19px] hover:cursor-pointer'
+        onClick={()=>navigate("/customize2")}>
           Next
-        </button>
+        </button>}
+        
     </div>
   )
 }
