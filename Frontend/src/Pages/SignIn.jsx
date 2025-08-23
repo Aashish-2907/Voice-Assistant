@@ -11,7 +11,7 @@ function SignIn() {
     const navigate=useNavigate();
     const [email,setEmail]=useState(""); 
     const [password,setPassword]=useState("");
-    const {serverUrl}=useContext(userDataContext);
+    const {serverUrl,userData,setUserData}=useContext(userDataContext);
     const[error,setError]=useState("");
     const[loading,setLoading]=useState(false);
     const handleSignin=async(e)=>{
@@ -34,11 +34,13 @@ function SignIn() {
             withCredentials: true
         }
     );
-    console.log(res.data);
+    setUserData(res.data);
     setLoading(false);
+    navigate('/');
     }
         
         catch (error) {
+            setUserData(null);
             console.log(error);
             setError(error.response.data.message);
             setLoading(false);

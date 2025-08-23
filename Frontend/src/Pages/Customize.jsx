@@ -1,0 +1,61 @@
+import React, { useContext, useRef } from 'react'
+import { useState } from 'react';
+import Card from '../components/card.jsx'
+import image1 from '../assets/Image-01.png'
+import image2 from '../assets/Robot.png'
+import image3 from '../assets/Image-03.png'
+import image4 from '../assets/Image-04.png'
+import image5 from '../assets/Image-05.jpg'
+import image6 from '../assets/Image-06.jpg'
+import image7 from '../assets/Image-07.jpg'
+import { IoMdCloudUpload } from "react-icons/io";
+import { userDataContext } from '../context/userContext.jsx';
+
+function Customize() {
+  const {serverUrl,
+        userData,
+        setUserData,frontendImage,
+        setFrontendImage,backendImage,
+        setBackendImage,selectedImage,
+        setSelectedImage}=useContext(userDataContext);
+  const inputImage=useRef();
+
+  const handleImage=(e)=>{
+    const file=e.target.files[0];
+    setBackendImage(file);
+    setFrontendImage(URL.createObjectURL(file));
+  }
+  
+  return (
+    <div className='w-full h-[100vh] bg-gradient-to-t from from-[black] to-[#020220] flex
+    justify-center items-center flex-col p-[20px]'>
+       <h1 className='text-white text-[30px] text-center mb-[30px]'>Select your <span className='text-blue-200'>Assistant Image</span> </h1>
+        <div className='w-full max-w-[900px] flex justify-center items-center flex-wrap gap-[15px] '>
+            <Card image={image1}/>
+            <Card image={image2}/>
+            <Card image={image3}/>
+            <Card image={image4}/>
+            <Card image={image5}/>
+            <Card image={image6}/>
+            <Card image={image7}/>
+            <div className={`bg-[#030326] border-2 border-[#0000ff66] rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-blue-950 cursor-pointer
+              hover:border-4 hover:border-[white] transition-all duration-300 flex items-center justify-center w-[70px] h-[140px] lg:w-[160px] lg:h-[250px]
+              ${selectedImage=="input"?"border-4 border-[white] shadow-2xl shadow-blue-950":null}`}
+              onClick={()=> {
+                inputImage.current.click()
+                setSelectedImage("input")
+            }}>
+               {!frontendImage && <IoMdCloudUpload className='text-white w-[25px] h-[25px] '/>} 
+               {frontendImage && <img src={frontendImage} className='h-full object-cover'/>}
+            </div>
+            <input type="file" accept="image/*" ref={inputImage} hidden 
+            onChange={handleImage}/>
+        </div>
+        <button className='min-w-[150px] h-[60px] mt-[30px] text-black font-semibold bg-white rounded-full text-[19px] hover:cursor-pointer'>
+          Next
+        </button>
+    </div>
+  )
+}
+
+export default Customize

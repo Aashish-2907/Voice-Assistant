@@ -13,7 +13,7 @@ function SignUp() {
     const [name,setName]=useState("");
     const [email,setEmail]=useState(""); 
     const [password,setPassword]=useState("");
-    const {serverUrl}=useContext(userDataContext);
+    const {serverUrl,userData, setUserData}=useContext(userDataContext);
     const[error,setError]=useState("");
     const[loading,setLoading]=useState(false);
     const handleSignup=async(e)=>{
@@ -37,11 +37,13 @@ function SignUp() {
             withCredentials: true
         }
     );
-    console.log(res.data);
+    setUserData(res.data);
     setLoading(false);
+    navigate('/customize');
 }
         catch (error) {
             console.log(error);
+            setUserData(null);
             setError(error.response.data.message);
             setLoading(false);
         }
