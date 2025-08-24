@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import authRouter from './routes/auth.routes.js';
 import cors from 'cors';
 import userRouter from './routes/user.routes.js';
+import geminiResponse from './gemini.js';
 
 
 const app = express();
@@ -16,14 +17,13 @@ app.use(cors({
     credentials: true,
 }))
 
-// app.get('/',(req,res)=>{
-//     res.send("HYY");
-// })
 
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api/auth",authRouter);
 app.use("/api/user",userRouter);
+
+
  
 app.listen(port,()=>{
     connectDb();
@@ -31,9 +31,6 @@ app.listen(port,()=>{
     console.log(`🚀 Server running on http://localhost:${port}`);
 })
 
-app.get("/api/user/update-test", (req, res) => {
-  res.send("Backend route is reachable!");
-});
 
 // console.log("CLOUDINARY_API_KEY:", process.env.CLOUDINARY_API_KEY);
 
