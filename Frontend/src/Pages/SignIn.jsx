@@ -54,7 +54,7 @@ function SignIn() {
             <h1 className='text-white text-[30px] font-semibold mb-[30px]'>
                 Login to <span className='text-blue-400'> Virtual Assistant</span>
             </h1>
-            <input type="text" placeholder='Enter registered Email'
+            <input type="email" placeholder='Enter registered Email'
             className='w-full h-[60px] 
             outline-none border-2 border-white bg-transparent 
             text-white placeholder-gray-300 px-[20px] py-[10px] rounded-full text-[18px]' required onChange={(e)=>setEmail(e.target.value)} value={email}/>

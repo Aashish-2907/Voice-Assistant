@@ -14,7 +14,11 @@ function card({image}) {
       border-2 border-[#0000ff66] rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-blue-950 cursor-pointer
       hover:border-4 hover:border-[white] transition-all duration-300 ${selectedImage==image?"border-4 border-[white] shadow-2xl shadow-blue-950":null}`}>
         <img src={image} className='h-full object-cover'
-        onClick={()=>setSelectedImage(image)}/>
+        onClick={()=>{
+          setSelectedImage(image)
+          setFrontendImage(null);
+          setBackendImage(null);
+        }}/>
     </div>
   )
 }
