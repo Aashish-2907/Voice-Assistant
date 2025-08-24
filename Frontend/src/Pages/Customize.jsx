@@ -1,6 +1,7 @@
 import React, { useContext, useRef } from 'react'
 import { useState } from 'react';
 import Card from '../components/card.jsx'
+import { IoArrowBack } from "react-icons/io5";
 import image1 from '../assets/Image-01.png'
 import image2 from '../assets/Robot.png'
 import image3 from '../assets/Image-03.png'
@@ -8,6 +9,7 @@ import image4 from '../assets/Image-04.png'
 import image5 from '../assets/Image-05.jpg'
 import image6 from '../assets/Image-06.jpg'
 import image7 from '../assets/Image-07.jpg'
+
 import { IoMdCloudUpload } from "react-icons/io";
 import { userDataContext } from '../context/userContext.jsx';
 import { Navigate, useNavigate } from 'react-router-dom';
@@ -30,7 +32,9 @@ function Customize() {
   
   return (
     <div className='w-full h-[100vh] bg-gradient-to-t from from-[black] to-[#020220] flex
-    justify-center items-center flex-col p-[20px]'>
+    justify-center items-center flex-col p-[20px] relative'>
+      <IoArrowBack className='absolute top-[30px] left-[30px] text-white w-[25px] h-[25px] cursor-pointer'
+            onClick={()=>navigate("/")}/>
        <h1 className='text-white text-[30px] text-center mb-[30px]'>Select your <span className='text-blue-200'>Assistant Image</span> </h1>
         <div className='w-full max-w-[900px] flex justify-center items-center flex-wrap gap-[15px] '>
             <Card image={image1}/>

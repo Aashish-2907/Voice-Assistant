@@ -1,10 +1,14 @@
 import React, { useContext } from 'react'
 import { userDataContext } from '../context/userContext';
 import { useState } from 'react';
+import { IoMdCloudUpload } from "react-icons/io";
+import { IoArrowBack } from "react-icons/io5";
 import axios from "axios"
+import { useNavigate } from 'react-router-dom';
 function Customize2() {    
     const {userData,backendImage,selectedImage,serverUrl,setUserData}=useContext(userDataContext);
     const  [assistantName,setAssistantName]=useState(userData?.assistantName || "");
+    const navigate=useNavigate();
 
     const handleUpdateAssistant=async ()=>{
         try {
@@ -22,13 +26,16 @@ function Customize2() {
             const result=await axios.post(`${serverUrl}/api/user/update`,formData,{withCredentials:true})
             console.log(result.data)
             setUserData(result.data);
+            navigate("/")
         } catch (error) {
             console.log(error)
         }
     }
   return (
     <div className='w-full h-[100vh] bg-gradient-to-t from from-[black] to-[#020220] flex
-    justify-center items-center flex-col p-[20px]'>
+    justify-center items-center flex-col p-[20px] relative'>
+        <IoArrowBack className='absolute top-[30px] left-[30px] text-white w-[25px] h-[25px] cursor-pointer'
+      onClick={()=>navigate("/customize")}/>
         <h1 className='text-white text-[30px] text-center mb-[30px]'>Enter Your <span className='text-blue-200'>Assistant Name</span></h1>
         <input type="text" placeholder='eg. Sifra'
             className='w-full max-w-[600px] h-[60px] 

@@ -15,10 +15,11 @@ function App() {
       {/* <Route path="/" element={<h1 className="text-center text-2xl mt-20">Welcome to the Virtual Assistant</h1>} /> */}
       {/* <Route path="/" element={<SignUp/>}/> */}
       {/* <Route path="/" element={<Home />} /> */}
-      <Route path="/" element={(userData?.assistImage && userData?.assistImage)?<Home/>:<Navigate to={"/customize"}/>}/>
-      <Route path="/signup" element={!userData?<SignUp/>:<Navigate to={"/"}/>}/>    
+      {/* <Route path="/" element={(userData?.assistImage && userData?.assistImage)?<Home/>:<Navigate to={"/customize"}/>}/> */}
+      <Route path="/" element={<Home />} />
+      <Route path="/signup" element={!userData?<SignUp/>:<Navigate to={"/customize"}/>}/>    
       <Route path="/signin" element={!userData?<SignIn/>:<Navigate to={"/"}/>}/>
-      <Route path="/customize" element={userData?<Customize/>:<Navigate to={"/signin"}></Navigate>}/>
+      <Route path="/customize" element={userData?<Customize/>:<Navigate to={"/signup"}></Navigate>}/>
       <Route path="/customize2" element={userData?<Customize2/>:<Navigate to={"/signin"}></Navigate>}/> 
     </Routes>
   );
