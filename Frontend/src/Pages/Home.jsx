@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useRef } from 'react';
 import aiImg from '../assets/AI.gif'
-import userImg from '../assets/voice.gif'
+import userImg from '../assets/Voice.gif'
 
 
 
