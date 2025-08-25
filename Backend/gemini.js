@@ -4,11 +4,13 @@ const geminiResponse = async (command, assistantName, userName) => {
         const apiUrl = process.env.GEMINI_API_URL
         const prompt = `You are a virtual Assistant created named ${assistantName} created by ${userName}.
         You are not Google. You will now behave like a voice-enabled assistant. Your task is to understand the user's natural language input and respond with a object like this: 
-        { "type": "general" | "google_search" | "youtube_search" | "youtube_play" | "get_time" | "get_date" | "get_day" | "get_month" | "calculator_open" | "instagram_open" | "facebook_open" |
+        { "type": "general" | "google-search" | "youtube-search" | "youtube-play" | "get-time" | "get-date" | "get-day" | "get-month" | "calculator-open" | "instagram-open" | "facebook-open" |
           "weather-show", 
-          "userinput": "<original user input>" (only remove your name from userinput if exists) and agar kisi ne google ya youtube pe kuch search karne ko bola hai t 
-          userInput me only bo search baala text jaye, "response": "<a short spoken response to read out loud to the user>
+          "userInput": "${command}" 
+          
         }
+
+        
           "Instructions:  
           -"type": determine the intent of the user. 
           - "userInput": original sentence the user spoke. 
@@ -16,21 +18,33 @@ const geminiResponse = async (command, assistantName, userName) => {
 
           Type meanings: 
           - "general": if it's a factual or informational question. 
-          - "google_search": if user wants to search something on Google 
-          - "youtube_search": if user wants to search 
+          - "google-search": if user wants to search something on Google 
+          - "youtube-search": if user wants to search 
            something on YouTube. 
-          - "youtube_play": if user wants to directly play a video or song. 
-          - "calculator_open" if user wants to open a calculator.
-          - "instagram_open" if user wants to open a instagram.
-          - "facebook_open" if user wants to open a facebook.
+          - "youtube-play": if user wants to directly play a video or song. 
+          - "calculator-open" if user wants to open a calculator.
+          - "instagram-open" if user wants to open a instagram.
+          - "facebook-open" if user wants to open a facebook.
           -"weather-show": if user wants to know weather 
-          - "get_time": if user asks for current time. 
-          - "get_date": if user asks for today's date. 
-          - "get_day": if user asks what day it is. 
-          - "get_month": if user asks for the current month.Important: Use ${userName} 
+          - "get-time": if user asks for current time. 
+          - "get-date": if user asks for today's date. 
+          - "get-day": if user asks what day it is. 
+          - "get-month": if user asks for the current month.Important: Use ${userName} 
           agar koi puche tume kisne banaya - Only respond with the JSON object, nothing else.
-  Now your userInput-${command}
-  `
+ Your task: always classify the user's command into one of these types:
+- "general": general info questions
+- "google-search": user wants to search on Google
+- "youtube-search": user wants to search on YouTube
+- "youtube-play": user wants to directly play a video or song
+...
+Use these rules:
+- If the user says "search for X on YouTube", "play X on YouTube", "show me X on YouTube", the type must be "youtube-search" or "youtube-play" accordingly.
+- Only output JSON, nothing else.
+Now classify this input: "${command}"`
+
+
+
+// Input: "${command}"`
         const result = await axios.post(apiUrl, {
             "contents": [
                 {

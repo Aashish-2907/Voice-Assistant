@@ -43,6 +43,72 @@ function Home() {
 
   // },[])
 
+
+const speak = (text) => {
+  if (!text) return;
+
+  let cleanText = String(text);
+
+  // Remove leading/trailing quotes
+  cleanText = cleanText.replace(/^"+|"+$/g, '');
+
+  // Remove zero-width or invisible characters
+  cleanText = cleanText.replace(/[\u200B-\u200D\uFEFF]/g, '');
+
+  // Replace multiple spaces with one
+  cleanText = cleanText.replace(/\s+/g, ' ').trim();
+
+  // Remove trailing punctuation that causes letter-by-letter speech
+  cleanText = cleanText.replace(/[.!?]$/, '');
+
+  if (typeof window !== "undefined" && window.speechSynthesis) {
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    window.speechSynthesis.speak(utterance);
+  } else {
+    console.warn("SpeechSynthesis not supported in this environment");
+  }
+};
+
+
+const handleCommand=(data)=>{
+  const{type: rawType,userInput,response}=data
+  let type=rawType
+  const lower = userInput.toLowerCase();
+  if (lower.includes("youtube")) {
+    type="youtube-search";
+  }
+  if (lower.includes("google") || lower.startsWith("search for"))  type="google-search";
+  if (lower.includes("calculator")) type="calculator-open";
+  if (lower.includes("instagram")) type="instagram-open";
+  // if (lower.includes("facebook")) return "facebook-open";
+  if (lower.includes("weather")) type="weather-show";
+
+  speak(response)
+
+  if(type==='google-search'){
+    const query=encodeURIComponent(userInput)
+    window.open(`https://www.google.com/search?q=${query}`,'_blank')
+  }
+  if(type==='calculator-open'){
+    const query=encodeURIComponent(userInput)
+    window.open(`https://www.google.com/search?q=calculator`,'_blank')
+  }
+  if(type==='instagram-open'){
+    const query=encodeURIComponent(userInput)
+    window.open(`https://www.instagram.com/`,'_blank')
+  }
+  if(type==='weather-show'){
+    const query=encodeURIComponent(userInput)
+    window.open(`https://www.google.com/search?q=weather`,'_blank')
+  }
+  if(type==='youtube-search' || type==='youtube_play'){
+    const query=encodeURIComponent(userInput)
+    window.open(`https://www.youtube.com/results?search_query=${query}`,'_blank')
+  }
+}
+
   useEffect(() => {
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -56,14 +122,30 @@ function Home() {
   recognition.continuous = true;
   recognition.lang = "en-US";
 
+  const parseGeminiResponse = (raw,transcript) => {
+  // Remove backticks if present
+  try {
+    // Extract the first {...} block
+    const match = raw.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error("No JSON found");
+    return JSON.parse(match[0]);
+  } catch (err) {
+    // fallback: treat entire raw as response
+    return { type: "general", userInput: transcript, response: raw };
+  }
+};
+
   recognition.onresult = async (e) => {
     const transcript = e.results[e.results.length - 1][0].transcript.trim();
     console.log("Heard:", transcript);
 
     // ✅ check if userData is available
     if (userData?.assistantName && transcript.toLowerCase().includes(userData.assistantName.toLowerCase())) {
-      const data = await getGeminiResponse(transcript);
+      const rawData = await getGeminiResponse(transcript);
+    const data = parseGeminiResponse(rawData.response || rawData,transcript);
       console.log("Gemini Response:", data);
+      handleCommand(data)
+      // speak(data.response)
     }
   };
 
