@@ -1,8 +1,8 @@
 import React from "react";
 import { Navigate, Route,Routes } from "react-router-dom";
 import SignUp from "./Pages/Signup.jsx";
-import SignIn from "./Pages/Signin";
-import Customize from "./Pages/Customize";
+import SignIn from "./Pages/Signin.jsx";
+import Customize from "./Pages/Customize.jsx";
 import Customize2 from "./Pages/Customize2.jsx";
 import { useContext } from "react";
 import { userDataContext } from "./context/UserContext.jsx";
