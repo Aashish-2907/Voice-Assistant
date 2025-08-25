@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate, Route,Routes } from "react-router-dom";
-import SignUp from "./Pages/Signup.jsx";
-import SignIn from "./Pages/Signin.jsx";
+import SignUp from "./Pages/SignUp.jsx";
+import SignIn from "./Pages/SignIn.jsx";
 import Customize from "./Pages/Customize.jsx";
 import Customize2 from "./Pages/Customize2.jsx";
 import { useContext } from "react";
