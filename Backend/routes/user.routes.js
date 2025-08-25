@@ -16,7 +16,7 @@
 
 
 import express from "express";
-import { updateAssistant,getCurrentUser } from "../controllers/user.controllers.js";
+import { updateAssistant,getCurrentUser, askToAssistant } from "../controllers/user.controllers.js";
 import upload from '../middlewares/multer.js';
 import isAuth from "../middlewares/isAuth.js";
 
@@ -29,5 +29,7 @@ router.post(
   upload.single("assistantImage"), // field name must match frontend FormData
   updateAssistant
 );
+
+router.post("/asktoassistant",isAuth,askToAssistant)
 
 export default router;

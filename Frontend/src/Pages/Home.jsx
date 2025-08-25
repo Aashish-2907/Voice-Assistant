@@ -3,9 +3,12 @@ import { useContext } from 'react'
 import { userDataContext } from '../context/userContext'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useEffect } from 'react';
+
 
 function Home() {
-  const {userData,serverUrl,setUserData}=useContext(userDataContext);
+  const {userData,serverUrl,setUserData,getGeminiResponse
+}=useContext(userDataContext);
   const navigate=useNavigate();
 
   const handleLogOut =async()=>{
@@ -19,6 +22,71 @@ function Home() {
        console.log(error)
     }
   }
+
+  // useEffect(()=>{
+  //   const SpeechRecognition=window.SpeechRecognition || window.webkitSpeechRecognition
+  //   const recognition=new SpeechRecognition()
+  //   recognition.continuous=true,
+  //   recognition.lang='en-US'
+
+  //   recognition.onresult=async(e)=>{ 
+  //     const transcript=e.results[e.results.length-1][0].transcript.trim();
+  //     console.log(transcript)
+
+  //     if(transcript.toLowerCase().includes(userData.assistantName.toLowerCase())){
+  //       const data=await getGeminiResponse(transcript)
+  //       console.log(data);
+  //     }
+  //   }
+  //   recognition.start()
+
+
+  // },[])
+
+  useEffect(() => {
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    console.log("SpeechRecognition not supported in this browser.");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.continuous = true;
+  recognition.lang = "en-US";
+
+  recognition.onresult = async (e) => {
+    const transcript = e.results[e.results.length - 1][0].transcript.trim();
+    console.log("Heard:", transcript);
+
+    // ✅ check if userData is available
+    if (userData?.assistantName && transcript.toLowerCase().includes(userData.assistantName.toLowerCase())) {
+      const data = await getGeminiResponse(transcript);
+      console.log("Gemini Response:", data);
+    }
+  };
+
+  // ✅ ask for mic permission first
+  navigator.mediaDevices
+    .getUserMedia({ audio: true })
+    .then(() => {
+      recognition.start();
+      console.log("Listening...");
+    })
+    .catch((err) => {
+      console.error("Mic permission denied:", err);
+    });
+
+  return () => {
+    recognition.stop();
+  };
+}, [userData, getGeminiResponse]);
+
+
+
+
+
   return (
     <div className='w-full h-[100vh] bg-gradient-to-t from from-[black] to-[#02023d] flex
     justify-center items-center flex-col relative gap-[15px]'>

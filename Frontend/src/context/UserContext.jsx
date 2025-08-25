@@ -1,5 +1,6 @@
 import React, { createContext, useEffect ,useState} from 'react';
 import axios from 'axios';
+// import getGeminiResponse from 
 
 export const userDataContext=createContext();
 function UserContext({children}){
@@ -19,6 +20,14 @@ function UserContext({children}){
         }
     }
 
+    const getGeminiResponse=async(command)=>{
+        try {
+            const result=await axios.post(`${serverUrl}/api/user/asktoassistant`,{command},{withCredentials:true})
+            return result.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
     useEffect(() => {
         handleCurrentUser();
     },[]);
@@ -28,7 +37,7 @@ function UserContext({children}){
         setUserData,frontendImage,
         setFrontendImage,backendImage,
         setBackendImage,selectedImage,
-        setSelectedImage
+        setSelectedImage,getGeminiResponse
     }
     return(
             <userDataContext.Provider value={value}>  
