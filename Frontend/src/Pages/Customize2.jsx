@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { userDataContext } from '../context/UserContext';
+import { userDataContext } from '../context/UserContext.jsx';
 import { useState } from 'react';
 import { IoMdCloudUpload } from "react-icons/io";
 import { IoArrowBack } from "react-icons/io5";
