@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate, Route,Routes } from "react-router-dom";
-import SignUp from "./Pages/Signup";
+import SignUp from "./Pages/Signup.jsx";
 import SignIn from "./Pages/Signin";
 import Customize from "./Pages/Customize";
 import Customize2 from "./Pages/Customize2.jsx";
