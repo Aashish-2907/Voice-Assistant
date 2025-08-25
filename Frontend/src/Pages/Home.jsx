@@ -1,15 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useContext } from 'react'
 import { userDataContext } from '../context/userContext'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect } from 'react';
+import { useRef } from 'react';
+import aiImg from '../assets/AI.gif'
+import userImg from '../assets/voice.gif'
+
+
 
 
 function Home() {
   const {userData,serverUrl,setUserData,getGeminiResponse
 }=useContext(userDataContext);
   const navigate=useNavigate();
+  const [listening,setListening]=useState(false);
+  const [userText,setUserText]=useState("")
+  const [aiText,setAiText]=useState("")
+  const isSpeakingRef=useRef(false)
+  const recognitionRef=useRef(null)
+  const isRecognizingRef = useRef(false);
+  const synth=window.speechSynthesis;
 
   const handleLogOut =async()=>{
     try {
@@ -23,25 +35,6 @@ function Home() {
     }
   }
 
-  // useEffect(()=>{
-  //   const SpeechRecognition=window.SpeechRecognition || window.webkitSpeechRecognition
-  //   const recognition=new SpeechRecognition()
-  //   recognition.continuous=true,
-  //   recognition.lang='en-US'
-
-  //   recognition.onresult=async(e)=>{ 
-  //     const transcript=e.results[e.results.length-1][0].transcript.trim();
-  //     console.log(transcript)
-
-  //     if(transcript.toLowerCase().includes(userData.assistantName.toLowerCase())){
-  //       const data=await getGeminiResponse(transcript)
-  //       console.log(data);
-  //     }
-  //   }
-  //   recognition.start()
-
-
-  // },[])
 
 
 const speak = (text) => {
@@ -63,9 +56,21 @@ const speak = (text) => {
 
   if (typeof window !== "undefined" && window.speechSynthesis) {
     const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.lang='hi-IN'
+    const voices=window.speechSynthesis.getVoices()
+    const hindiVoice= voices.find(v=>v.lang=='hi-IN')
+    if(hindiVoice){
+      utterance.voice=hindiVoice
+    }
+    isSpeakingRef.current=true
+    utterance.onend=()=>{
+      isSpeakingRef.current=false
+      setAiText("");
+      recognitionRef.current?.start()
+    }
     utterance.rate = 1;
     utterance.pitch = 1;
-    window.speechSynthesis.speak(utterance);
+    synth.speak(utterance);
   } else {
     console.warn("SpeechSynthesis not supported in this environment");
   }
@@ -110,6 +115,7 @@ const handleCommand=(data)=>{
 }
 
   useEffect(() => {
+    if (!userData?.assistantName) return;
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -121,6 +127,80 @@ const handleCommand=(data)=>{
   const recognition = new SpeechRecognition();
   recognition.continuous = true;
   recognition.lang = "en-US";
+
+  recognitionRef.current=recognition
+
+  
+
+  const safeRecognition=()=>{
+      if(!isRecognizingRef.current && !isRecognizingRef.current){
+        try {
+            recognition.start();
+            console.log("Recognition requested to start")
+        } catch (err) {
+          if(err.name !=="InvalidStateError"){
+            console.log("Servor error:",err)
+          }
+        }
+       
+      }
+  }
+
+  recognition.onstart = ()=>{
+    console.log("Recognition started")
+    isRecognizingRef.current=true
+    setListening(true)
+  }
+
+  recognition.onend = ()=>{
+  console.log("Recognition ended")
+  isRecognizingRef.current=false
+  setListening(false)
+  
+  }
+
+  if(!isSpeakingRef.current){
+    setTimeout(()=>{
+      safeRecognition()
+    },1000)
+  }
+
+  recognition.onerror=(event) =>{
+    console.warn("Recognition error:",event.error)
+    isRecognizingRef.current=false
+    setListening(false)
+    if(event.error!=="aborted" && !isSpeakingRef.current){
+      setTimeout(()=>{
+        safeRecognition();
+      },1000)
+    }
+  }
+
+   recognition.onresult = async (e) => {
+    const transcript = e.results[e.results.length - 1][0].transcript.trim();
+    console.log("Heard:", transcript);
+    console.log("Assistant Name:", userData?.assistantName);
+    console.log("Transcript Lower:", transcript.toLowerCase());
+
+
+    // ✅ check if userData is available
+    if (
+  userData?.assistantName &&
+  transcript.toLowerCase().includes(userData.assistantName.toLowerCase().trim())){
+      setAiText("")
+      setUserText(transcript)
+      recognition.stop()
+      isRecognizingRef.current=false
+      setListening(false)
+      const rawData = await getGeminiResponse(transcript);
+    const data = parseGeminiResponse(rawData.response || rawData,transcript);
+      console.log("Gemini Response:", data);
+      handleCommand(data)
+      setAiText(data.response)
+      // speak(data.response)
+    }
+  };
+
 
   const parseGeminiResponse = (raw,transcript) => {
   // Remove backticks if present
@@ -135,33 +215,17 @@ const handleCommand=(data)=>{
   }
 };
 
-  recognition.onresult = async (e) => {
-    const transcript = e.results[e.results.length - 1][0].transcript.trim();
-    console.log("Heard:", transcript);
 
-    // ✅ check if userData is available
-    if (userData?.assistantName && transcript.toLowerCase().includes(userData.assistantName.toLowerCase())) {
-      const rawData = await getGeminiResponse(transcript);
-    const data = parseGeminiResponse(rawData.response || rawData,transcript);
-      console.log("Gemini Response:", data);
-      handleCommand(data)
-      // speak(data.response)
-    }
-  };
-
-  // ✅ ask for mic permission first
-  navigator.mediaDevices
-    .getUserMedia({ audio: true })
-    .then(() => {
-      recognition.start();
-      console.log("Listening...");
-    })
-    .catch((err) => {
-      console.error("Mic permission denied:", err);
-    });
-
+  const fallback=setInterval(()=>{
+            if(!isRecognizingRef && !isRecognizingRef){
+              safeRecognition()
+            }
+          },10000)
   return () => {
     recognition.stop();
+    setListening(false);
+    isRecognizingRef.current = false; // ✅ correct
+    clearInterval(fallback)
   };
 }, [userData, getGeminiResponse]);
 
@@ -184,6 +248,8 @@ const handleCommand=(data)=>{
           <img src={userData?.assistantImage} alt=""  className='h-full object-cover'/>
       </div>
       <h1 className='text-white text-[18px] font-semibold'>I'm {userData?.assistantName}</h1>
+      {!aiText && <img src={userImg} alt="" className='w-[200px] '/>}
+      {aiText && <img src={aiImg} alt="" className='w-[200px] '/>}
     </div>
   )
 }
