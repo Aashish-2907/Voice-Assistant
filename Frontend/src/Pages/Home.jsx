@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { useContext } from 'react'
-import { userDataContext } from '../context/userContext'
+import { userDataContext } from '../context/UserContext.jsx'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useRef } from 'react';
 import aiImg from '../assets/AI.gif'
-import userImg from '../assets/voice.gif'
+import userImg from '../assets/Voice.gif'
 
 
 

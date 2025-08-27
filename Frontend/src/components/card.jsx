@@ -1,6 +1,6 @@
 import React from 'react'
 import { useContext } from 'react'
-import UserDataContext, { userDataContext } from '../context/userContext'
+import UserDataContext, { userDataContext } from '../context/UserContext.jsx'
 
 
 function card({image}) {

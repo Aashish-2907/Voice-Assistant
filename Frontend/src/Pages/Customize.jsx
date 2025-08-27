@@ -11,7 +11,7 @@ import image6 from '../assets/Image-06.jpg'
 import image7 from '../assets/Image-07.jpg'
 
 import { IoMdCloudUpload } from "react-icons/io";
-import { userDataContext } from '../context/userContext.jsx';
+import { userDataContext } from '../context/UserContext.jsx';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 function Customize() {
