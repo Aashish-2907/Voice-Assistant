@@ -52,8 +52,12 @@ function SignIn() {
             bg-[#00000062] backdrop-blur shadow-lg shadow-black flex flex-col justify-center items-center gap-[20px]
              px-[20px]'onSubmit={handleSignin} >
             <h1 className='text-white text-[30px] font-semibold mb-[30px]'>
-                Login to <span className='text-blue-400'> Virtual Assistant</span>
+                Login to <span className='text-blue-400'> Voice Assistant</span>
             </h1>
+            <h2 className="text-white font-semibold">
+              <span className="text-red-600 text-xl">Note:</span>
+              <span className="text-sm"> Always Use Assistant name to get response</span>
+            </h2>
             <input type="email" placeholder='Enter registered Email'
             className='w-full h-[60px] 
             outline-none border-2 border-white bg-transparent 
