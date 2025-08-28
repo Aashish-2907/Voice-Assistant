@@ -16,7 +16,7 @@ function App() {
       {/* <Route path="/" element={<SignUp/>}/> */}
       {/* <Route path="/" element={<Home />} /> */}
       {/* <Route path="/" element={(userData?.assistImage && userData?.assistImage)?<Home/>:<Navigate to={"/customize"}/>}/> */}
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={!userData?<SignIn/>:<Home/>} />
       <Route path="/signup" element={!userData?<SignUp/>:<Navigate to={"/"}/>}/>    
       <Route path="/signin" element={!userData?<SignIn/>:<Navigate to={"/"}/>}/>
       <Route path="/customize" element={userData?<Customize/>:<Navigate to={"/signup"}></Navigate>}/>
