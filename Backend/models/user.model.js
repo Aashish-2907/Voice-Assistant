@@ -20,7 +20,7 @@ const userSchema =new mongoose.Schema({
     },
     history:[{type:String}]
 }
-,{timeStamps:true})
+,{timestamps:true})
 
 const User=mongoose.model("User",userSchema);
 
